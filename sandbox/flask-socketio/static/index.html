@@ -28,6 +28,7 @@
         socket.emit('ctrl', { 'act': 'new' })
         socket.on('ctrl', function(msg){
           id = msg.id;
+          $('#messages').append($('<li>').text('$ id:' + id));
         });
         // command
         $('form').submit(function(){
@@ -36,17 +37,21 @@
             'payload': $('#m').val() + '\n'
           });
           $('#messages').append($('<li>').text('$ ' + $('#m').val()));
-          window.scrollTo(0, document.body.scrollHeight);
           $('#m').val('');
+          $('#messages').append($('<li>').text("send in"));
+          window.scrollTo(0, document.body.scrollHeight);
           return false;
         });
-        socket.on('data', function(msg){
-          var text = JSON.stringify(msg, null, 2);
-          if (msg.error == 0) {
-            text = msg.payload;
-          }
-          $('#messages').append($('<li>').text(text));
+        socket.on('rb', function(msg){
+          $('#messages').append($('<li>').text("read back"));
+          //var rb = JSON.stringify(msg, null, 2);
+          //if (msg.error == '0') {
+          //  rb = msg.payload;
+          //}
+          $('#messages').append($('<li>').text(msg.payload));
           window.scrollTo(0, document.body.scrollHeight);
+          rb = '';
+          msg = '';
         });
       });
     </script>

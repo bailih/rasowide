@@ -60,10 +60,11 @@ def handle_ctrl(json):
 # write data back to client
 def respond_data(uuid, payload):
   json = {}
-  json['id'] = uuid
-  json['error'] = 0
+  json['id'] = str(uuid)
+  json['error'] = '0'
   json['payload'] = payload
-  io.emit('data', json)
+  io.emit('rb', json)
+  print json
 
 # payload requests
 @io.on('data')
@@ -78,6 +79,8 @@ def handle_data(json):
 
   # pass payload to bash session
   terms[json['id']].write(json['payload'])
+  io.emit('rb', json)
+  print json
 
 if __name__ == "__main__":
   io.run(app, '0.0.0.0', 5000)
